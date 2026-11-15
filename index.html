@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>传奇学堂</title>
+  <meta name="description" content="面向小学 1 到 6 年级的单机冒险：打怪答题，学习人教版语文和数学。">
+  <link rel="icon" href="favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="fatal"></div>
+  <canvas id="world"></canvas>
+
+  <section id="title">
+    <div class="title-card">
+      <div class="brand">
+        <img src="favicon.svg" alt="">
+        <div>
+          <h1>传奇学堂</h1>
+          <p class="sub">一边冒险，一边学会小学语文和数学</p>
+        </div>
+      </div>
+      <p class="lead">选择战士、法师或道士，在新手村、森林、僵尸洞和沃玛寺庙里战斗。怪物倒下后会出题，答对才能获得装备、药品和金币。</p>
+      <div class="row" id="title-actions">
+        <button class="primary" id="btn-new" type="button">开始新冒险</button>
+        <button class="ghost" id="btn-continue" type="button" disabled>继续冒险</button>
+      </div>
+      <div id="create" class="hidden">
+        <label class="field">英雄的名字
+          <input id="name-input" type="text" maxlength="8" placeholder="例如：乐乐" autocomplete="nickname">
+        </label>
+        <div class="field">年级</div>
+        <div id="grade-box" class="choice-grid"></div>
+        <div class="field">职业</div>
+        <div id="class-box"></div>
+        <button class="primary" id="btn-start" type="button">进入新手村</button>
+      </div>
+      <p class="fine">画面为原创绘制，不使用商业游戏的图片。进度保存在这台电脑的浏览器里。适合小学 1–6 年级。</p>
+    </div>
+  </section>
+
+  <div id="hud" class="hidden">
+    <div class="bars">
+      <div class="who">
+        <b id="who-name">小侠</b>
+        <span id="who-meta">战士 · 一年级 · 1级</span>
+        <span class="gold" id="gold-text">金币 0</span>
+      </div>
+      <div class="bar" title="生命"><i id="hp-fill"></i><em id="hp-text"></em></div>
+      <div class="bar" title="魔法"><i id="mp-fill"></i><em id="mp-text"></em></div>
+      <div class="bar" title="经验"><i id="exp-fill"></i><em id="exp-text"></em></div>
+      <div id="target-box"></div>
+    </div>
+    <div id="minimap-wrap">
+      <p>小地图</p>
+      <canvas id="minimap" width="180" height="132"></canvas>
+    </div>
+    <div id="zone-banner"></div>
+    <div id="toast"></div>
+    <div id="log-wrap">
+      <div id="log" aria-live="polite"></div>
+      <input id="chat-input" type="text" maxlength="40" placeholder="说一句话，回车发送" autocomplete="off">
+    </div>
+    <div id="dock">
+      <div id="hotbar"></div>
+      <div class="pots">
+        <button class="small" id="pot-hp" type="button">1 金创药</button>
+        <button class="small" id="pot-mp" type="button">2 魔法药</button>
+      </div>
+    </div>
+    <div id="menu">
+      <button class="small" id="btn-char" type="button">角色 C</button>
+      <button class="small" id="btn-bag" type="button">背包 B</button>
+      <button class="small" id="btn-skill" type="button">技能 K</button>
+      <button class="small" id="btn-report" type="button">学习报告 L</button>
+      <button class="small" id="btn-map" type="button">地图 M</button>
+      <button class="small" id="btn-help" type="button">帮助 H</button>
+      <button class="small" id="btn-sound" type="button">声音 关</button>
+      <button class="small" id="btn-save" type="button">保存</button>
+      <button class="small" id="btn-full" type="button">全屏</button>
+    </div>
+  </div>
+
+  <div id="panel" class="hidden">
+    <div class="sheet" role="dialog" aria-modal="true">
+      <div class="sheet-head">
+        <h2 id="panel-title">面板</h2>
+        <button class="small" id="panel-close" type="button">关闭</button>
+      </div>
+      <div id="panel-body"></div>
+    </div>
+  </div>
+
+  <div id="question" class="hidden" role="dialog" aria-modal="true">
+    <div class="q-card">
+      <div class="q-top">
+        <span id="q-badge" class="badge">语文</span>
+        <span id="q-step"></span>
+      </div>
+      <div id="q-kp"></div>
+      <h2 id="q-text"></h2>
+      <div id="q-options"></div>
+      <form id="q-form">
+        <input id="q-input" type="text" autocomplete="off" placeholder="把答案写在这里">
+        <button class="primary" id="q-submit" type="submit">提交答案</button>
+      </form>
+      <div id="q-result" class="hidden"></div>
+      <div class="row">
+        <button class="primary hidden" id="q-next" type="button">继续冒险</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="confirm" class="hidden" role="dialog" aria-modal="true">
+    <div class="confirm-card">
+      <p id="confirm-text"></p>
+      <div class="row">
+        <button class="primary" id="confirm-ok" type="button">确定</button>
+        <button class="ghost" id="confirm-cancel" type="button">再想想</button>
+      </div>
+    </div>
+  </div>
+
+  <noscript><p style="color:#fff;padding:24px">请开启浏览器的 JavaScript，才能进入传奇学堂。</p></noscript>
+  <script src="data/questions.js"></script>
+  <script src="js/content.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
